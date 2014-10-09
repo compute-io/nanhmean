@@ -25,7 +25,16 @@
   "keywords": [
     "compute.io",
     "compute",
-    "computation"
+    "computation",
+    "mathematics",
+    "math",
+    "statistics",
+    "stats",
+    "harmonic",
+    "mean",
+    "average",
+    "harmonic mean",
+    "nan"
   ],
   "bugs": {
     "url": "https://github.com/compute-io/nanhmean/issues"

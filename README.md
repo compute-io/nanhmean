@@ -19,14 +19,46 @@ For use in the browser, use [browserify](https://github.com/substack/node-browse
 To use the module,
 
 ``` javascript
-var lib = require( 'compute-nanhmean' );
+var nanhmean = require( 'compute-nanhmean' );
 ```
+
+#### nanhmean( arr )
+
+Computes the harmonic mean ignoring non-numeric values.
+
+``` javascript
+var data = [ 1, 5, NaN, 3, 4, NaN, 16 ];
+
+var mu = nanhmean( data );
+// returns ~2.7088
+```
+
+Note: only calculate the harmonic mean for positive, real numbers. 
+
+If an `array` contains negative numbers, the harmonic mean is nonsensical. For example, consider `x = [ 3, -3, 4 ]`. The harmonic mean of `x` is `12`, while the arithmetic mean is `1.33333...`. The harmonic mean should never be greater than the arithmetic mean. 
+
+Similarly, if an `array` contains zero values, the harmonic mean is also zero: `1/0 --> infinity` and `1/infinity --> 0`. For example, consider `x = [ 0, 100, 1000, 10000 ]`. Using the textbook definition of the harmonic mean, the mean would be `0`, which, given `x`, does not make sense.
+
+If an `array` contains elements less than or equal to `0`, the function returns `NaN`.
+
 
 
 ## Examples
 
 ``` javascript
-var lib = require( 'compute-nanhmean' );
+var nanhmean = require( 'compute-nanhmean' );
+
+var data = new Array( 1000 );
+
+for ( var i = 0; i < data.length; i++ ) {
+	if ( i%5 === 0 ) {
+		data[ i ] = NaN;
+	} else {
+		data[ i ] = Math.random() * 100;
+	}
+}
+
+console.log( nanhmean( data ) );
 ```
 
 To run the example code from the top-level application directory,
@@ -34,6 +66,17 @@ To run the example code from the top-level application directory,
 ``` bash
 $ node ./examples/index.js
 ```
+
+
+## Notes
+
+The harmonic mean of an array containing non-numeric values is equal to the harmonic mean of an equivalent array which contains only the numeric values. Hence,
+
+var d1 = [ 1, NaN, 2, 3, NaN ],
+    d2 = [ 1, 2, 3 ];
+
+console.log( nanhmean( d1 ) === nanhmean( d2 ) );
+// returns true
 
 
 ## Tests
