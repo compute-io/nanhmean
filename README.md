@@ -41,7 +41,7 @@ data = [ 1, 5, NaN, 3, 4, NaN, 16 ];
 mu = nanhmean( data );
 // returns ~2.7088
 
-data = new Int8Array( data );
+data = new Int32Array( data );
 mu = nanhmean( data );
 // returns ~2.7088
 ```
@@ -54,7 +54,27 @@ Similarly, if an `array` contains zero values, the harmonic mean is also zero: `
 
 If an `array` contains elements less than or equal to `0`, the function returns `NaN`.
 
-For non-numeric `arrays`, provide an accessor `function` for accessing `array` values.
+If the array or matrix contains missing values encoded by numbers, use the `encoding` option to ensure they do not affect the calculation:
+
+* __encoding__: `array` holding all values which will be regarded as missing values. Default: `[]`.
+
+```
+var data, mu;
+
+data = [ 1, 5, 999, 3, 4, 981, 16 ];
+mu = nanhmean( data, {
+	'encoding': [ 981, 999 ]
+});
+// returns ~2.7088
+
+data = new Int32Array( data );
+mu = nanhmean( data, {
+	'encoding': [ 981, 999 ]
+});
+// returns ~2.7088
+```
+
+For object `arrays`, provide an accessor `function` for accessing `array` values.
 
 ``` javascript
 var data = [
