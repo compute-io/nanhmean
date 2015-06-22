@@ -8,7 +8,7 @@ The [harmonic mean](http://en.wikipedia.org/wiki/Harmonic_mean) is defined as
 
 <div class="equation" align="center" data-raw-text="
     H = \frac{N}{\sum_{i=0}^{N-1} \frac{1}{x_i}}" data-equation="eq:harmonic_mean">
-	<img src="" alt="Equation for the harmonic mean.">
+	<img src="https://cdn.rawgit.com/compute-io/nanhmean/323f5c47275f812989d149802394952979ccbf39/docs/img/eqn1.svg" alt="Equation for the harmonic mean.">
 	<br>
 </div>
 
