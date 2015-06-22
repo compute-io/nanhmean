@@ -10,7 +10,7 @@ var // Expectation library:
 	isnan = require( 'validate.io-nan' ),
 
 	// Validate if a value is numeric:
-	isNumber = require( 'validate.io-number' ),
+	isNumber = require( 'validate.io-number-primitive' ),
 
 	// Module to be tested:
 	nanhmean = require( './../lib/accessor.js' );
@@ -30,7 +30,7 @@ describe( 'accessor harmonic mean', function tests() {
 		expect( nanhmean ).to.be.a( 'function' );
 	});
 
-	it( 'should compute the harmonic mean using an accessor', function test() {
+	it( 'should compute the harmonic mean using an accessor ignoring nun-numeric / missing values', function test() {
 		var data,
 			expected,
 			sum,
@@ -50,13 +50,15 @@ describe( 'accessor harmonic mean', function tests() {
 			{'x':{}},
 			{'x':function(){}},
 			{'x':8},
-			{'x':2}
+			{'x':2},
+			/// 999 shall denote a missing value
+			{'x':999}
 		];
 
 		sum = 0;
 		for ( var i = 0; i < data.length; i++ ) {
 			d = getValue( data[ i ] );
-			if ( !isNumber( d ) ) {
+			if ( !isNumber( d ) || d === 999 ) {
 				continue;
 			}
 			N += 1;
@@ -64,12 +66,14 @@ describe( 'accessor harmonic mean', function tests() {
 		}
 		expected = N / sum;
 
-		assert.closeTo( nanhmean( data, getValue ), expected, 1e-7 );
+		assert.closeTo( nanhmean( data, [ 999 ], getValue ), expected, 1e-7 );
 
 		function getValue( d ) {
 			return d.x;
 		}
 	});
+
+
 
 	it( 'should return NaN if an accessed array value is 0', function test() {
 		var data, mu;
@@ -80,7 +84,7 @@ describe( 'accessor harmonic mean', function tests() {
 			{'x':5}
 		];
 
-		mu = nanhmean( data, getValue );
+		mu = nanhmean( data, [], getValue );
 
 		// Check: mu === NaN
 		assert.isTrue( isnan( mu ) );
@@ -98,7 +102,7 @@ describe( 'accessor harmonic mean', function tests() {
 			{'x':-4},
 			{'x':5}
 		];
-		mu = nanhmean( data, getValue );
+		mu = nanhmean( data, [], getValue );
 
 		// Check: mu === NaN
 		assert.isTrue( isnan( mu ) );
@@ -109,7 +113,7 @@ describe( 'accessor harmonic mean', function tests() {
 	});
 
 	it( 'should return null if provided an empty array', function test() {
-		assert.isNull( nanhmean( [], getValue ) );
+		assert.isNull( nanhmean( [], [], 		getValue ) );
 
 		function getValue( d ) {
 			return d.x;

@@ -30,7 +30,7 @@ describe( 'array harmonic mean', function tests() {
 		expect( nanhmean ).to.be.a( 'function' );
 	});
 
-	it( 'should compute the harmonic mean', function test() {
+	it( 'should compute the harmonic mean ignoring nun-numeric / missing values', function test() {
 		var data,
 			d,
 			sum,
@@ -51,14 +51,18 @@ describe( 'array harmonic mean', function tests() {
 			{},
 			function(){},
 			8,
-			2
+			2,
+			/// 999 shall denote a missing value
+			999,
+			999,
+			999
 		];
 
 		N = 0;
 		sum = 0;
 		for ( var i = 0; i < data.length; i++ ) {
 			d = data[ i ];
-			if ( !isNumber( d ) ) {
+			if ( !isNumber( d ) || d === 999 ) {
 				continue;
 			}
 			N += 1;
@@ -66,14 +70,14 @@ describe( 'array harmonic mean', function tests() {
 		}
 		expected = N/ sum;
 
-		assert.closeTo( nanhmean( data ), expected, 1e-7 );
+		assert.closeTo( nanhmean( data, [ 999 ] ), expected, 1e-7 );
 	});
 
 	it( 'should return NaN if an input array contains a 0', function test() {
 		var data, mu;
 
 		data = [ 2, 4, 0, 3, 8, 2 ];
-		mu = nanhmean( data );
+		mu = nanhmean( data, [] );
 
 		// Check: mu === NaN
 		assert.isTrue( isnan( mu ) );
@@ -83,7 +87,7 @@ describe( 'array harmonic mean', function tests() {
 		var data, mu;
 
 		data = [ 3, -4, 5 ];
-		mu = nanhmean( data );
+		mu = nanhmean( data, [] );
 
 		// Check: mu === NaN
 		assert.isTrue( isnan( mu ) );
@@ -92,7 +96,7 @@ describe( 'array harmonic mean', function tests() {
 
 
 	it( 'should return null if provided an empty array', function test() {
-		assert.isNull( nanhmean( [] ) );
+		assert.isNull( nanhmean( [], [] ) );
 	});
 
 });
